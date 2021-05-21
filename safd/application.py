@@ -1,11 +1,29 @@
 import re
+from safd.request import Request
+from safd.response import Response
 
-class Router:
+class Application:
+
     def __init__(self):
+        self.request = None
+        self.response = None
         self.routes = {}
 
     def __call__(self, environ, start_response):
-        pass
+
+        request = Request(environ)
+        response = Response(start_response);
+
+        verb = request.verb
+        path = request.path
+
+        f, p = self.dispatch(verb, path)
+        response.body = f(request, response, *p)
+        body = response.conclude()
+        return body
+
+            #body = self.handle_exception(e, start_response)
+            #return body
 
     """
     I may add another way of routing using the tree I designed in my previous
@@ -14,6 +32,7 @@ class Router:
     def route(self, pattern):
         def decorator(func):
             verb = func.__name__
+            print(verb)
             r = (re.compile(pattern), func)
             regs = self.routes.setdefault(verb, [])
             regs.append(r)
@@ -39,3 +58,5 @@ class Router:
         TODO: Raise appropriate exception
         """
         raise Exception
+
+
