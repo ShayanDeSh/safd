@@ -33,14 +33,6 @@ class Response(Headers):
         else:
             self['Content-Type'] = '%s; charset=%s' % (v, self.charset)
 
-    @property
-    def content_length(self):
-        return self.content_length 
-
-    @content_type.setter
-    def content_length(self, v):
-        self.content_length  = v
-
     def cookie(self, name, value, options={}, path='/'):
         options['path'] = path
         self.__cookies[name] = value
@@ -68,14 +60,12 @@ class Response(Headers):
         if self.charset:
             body = [i.encode(self.charset) for i in body]
 
-        if self.content_length is None:
-            self['content-length'] = sum(len(i) for i in body)
+        self['content-length'] = str(sum(len(i) for i in body))
 
         cookie = self.__cookies.output()
         if cookie:
             for line in cookie.split('\r\n'):
                 self.add_header(*line.split(': '))
-        print(self.items())
         self.start_response(self.status, self.items())
 
         return body

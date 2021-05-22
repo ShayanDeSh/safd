@@ -32,7 +32,6 @@ class Application:
     def route(self, pattern):
         def decorator(func):
             verb = func.__name__
-            print(verb)
             r = (re.compile(pattern), func)
             regs = self.routes.setdefault(verb, [])
             regs.append(r)
