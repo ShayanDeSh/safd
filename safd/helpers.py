@@ -1,4 +1,5 @@
 from functools import wraps
+import ujson
 
 class Lazy:
     __slots__ = ('f',)
@@ -14,12 +15,13 @@ class Lazy:
         setattr(obj, f.__name__, val)
         return val
 
-def statuscode(code):
+def code(status):
     def decorator(handler):
+        @wraps(handler)
         def wrapper(request, response, *a, **k):
             result = handler(request, response, *a, **k)
-            response.status = code if isinstance(code, str) else \
-                code().status
+            response.status = status if isinstance(status, str) else\
+                    str(status())
             return result
         return wrapper
     return decorator

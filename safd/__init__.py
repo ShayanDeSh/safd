@@ -1,2 +1,2 @@
 from .application import Application
-from .helpers import statuscode, json, html, text
+from .helpers import code, json, html, text
