@@ -1,6 +1,6 @@
-#Simple As Fuck Dispatcher
+# Simple As Fuck Dispatcher
 
-```
+```py
 from safd import Application, json, code
 from safd.status import BAD_REQUEST
 
